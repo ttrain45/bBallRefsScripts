@@ -26,7 +26,11 @@ class SEASON_STAT_LINE:
 def get_drtg_plus(input_row):
     return input_row['drtg'] / season_averages.loc[input_row['season']]['drtg'] * 100
 
-start_year = 1956
+def get_ortg_plus(input_row):
+    return input_row['ortg'] / season_averages.loc[input_row['season']]['ortg'] * 100
+
+#start_year = 1956
+start_year = 1976
 end_year = 2021
 years = list(range(start_year, end_year))
 
@@ -59,13 +63,19 @@ for year in years:
 seasons = pd.DataFrame.from_records([stat_line.to_dict() for stat_line in stat_lines])
 season_averages = seasons.groupby('season').mean().round(3)
 
-print(seasons.head(10))
-
 #seasons['drtg+'] = (seasons['drtg'] / season_averages.loc[seasons['season']]['drtg']) * 100
+
+seasons['ortg+'] = seasons.apply(get_ortg_plus, axis=1)
 
 seasons['drtg+'] = seasons.apply(get_drtg_plus, axis=1)
 
-print(seasons[['team_name', 'season', 'drtg+']].sort_values(by=['drtg+']).head(20))
+seasons['DOrt+'] = (seasons['ortg+'] - 100) + (100 - seasons['drtg+'])
+
+print(seasons[['team_name', 'season', 'ortg+']].sort_values(by=['ortg+'], ascending=False).head(20))
+
+print(seasons[['team_name', 'season', 'drtg+']].sort_values(by=['drtg+'], ascending=True).head(20))
+
+print(seasons[['team_name', 'season', 'DOrt+', 'ortg+', 'drtg+']].sort_values(by=['DOrt+'], ascending=False).head(20))
 
 
 
