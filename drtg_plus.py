@@ -69,7 +69,7 @@ seasons['ortg+'] = seasons.apply(get_ortg_plus, axis=1)
 
 seasons['drtg+'] = seasons.apply(get_drtg_plus, axis=1)
 
-seasons['DOrt+'] = (seasons['ortg+'] - 100) + (100 - seasons['drtg+'])
+seasons['DOrt+'] = seasons['ortg+'] - seasons['drtg+']
 
 print(seasons[['team_name', 'season', 'ortg+']].sort_values(by=['ortg+'], ascending=False).head(20))
 
